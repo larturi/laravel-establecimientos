@@ -1,9 +1,16 @@
 @extends('layouts.app')
 
 @section('styles')
+    <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
     crossorigin=""/>
+
+    <!-- Esri Leaflet Geocoder -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css"
+    />
 @endsection
 
 @section('content')
@@ -88,7 +95,7 @@
                                placeholder="Dirección del establecimiento">
 
                         <p class="text-secondary mt-4 mb-3 text-center">
-                            El asistente colocara una dirección estimada. Mueve el pin hacia el lugar correcto.
+                            El asistente colocara una dirección estimada o mueve el pin hacia el lugar correcto para mayor precisión.
                         </p>
                     </div>
 
@@ -144,8 +151,14 @@
 @endsection
 
 @section('scripts')
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    <!-- Leaflet from CDN -->
+    <script defer src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin="">
     </script>
+
+     <!-- Load Esri Leaflet from CDN -->
+     <script defer src="https://unpkg.com/esri-leaflet"></script>
+     <script defer src="https://unpkg.com/esri-leaflet-geocoder"></script>
+
 @endsection
