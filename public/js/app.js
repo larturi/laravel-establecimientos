@@ -63847,6 +63847,8 @@ var app = new Vue({
 
 __webpack_require__(/*! ./mapa */ "./resources/js/mapa.js");
 
+__webpack_require__(/*! ./dropzone */ "./resources/js/dropzone.js");
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":
@@ -63963,6 +63965,54 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/dropzone.js":
+/*!**********************************!*\
+  !*** ./resources/js/dropzone.js ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _require = __webpack_require__(/*! axios */ "./node_modules/axios/index.js"),
+    Axios = _require["default"];
+
+document.addEventListener('DOMContentLoaded', function () {
+  if (document.querySelector('#dropzone')) {
+    Dropzone.autoDiscover = false;
+    var dropzone = new Dropzone('div#dropzone', {
+      url: '/imagenes/store',
+      dictDefaultMessage: 'Arrastra aqui hasta 10 imágenes',
+      maxFiles: 10,
+      required: true,
+      acceptedFiles: '.png,.jpg,.gif,.bmp,.jpeg',
+      addRemoveLinks: true,
+      dictRemoveFile: 'Eliminar Imagen',
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content
+      },
+      success: function success(file, respuesta) {
+        console.log(respuesta);
+        file.nombreServidor = respuesta.archivo;
+      },
+      sending: function sending(file, xhr, formData) {
+        formData.append('uuid', document.querySelector('#uuid').value);
+      },
+      removedfile: function removedfile(file, respuesta) {
+        console.log(file);
+        var params = {
+          imagen: file.nombreServidor
+        };
+        axios.post('/imagenes/destroy', params).then(function (respuesta) {
+          console.log(respuesta);
+        }); // Elimino del DOM
+
+        file.previewElement.parentNode.removeChild(file.previewElement);
+      }
+    });
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/mapa.js":
 /*!******************************!*\
   !*** ./resources/js/mapa.js ***!
@@ -64032,8 +64082,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function llenarInputs(resultado) {
+    console.log(resultado.address);
     document.getElementById('direccion').value = resultado.address.Address || '';
     document.getElementById('localidad').value = resultado.address.Neighborhood || '';
+    document.getElementById('cp').value = resultado.address.Postal || '';
     document.getElementById('lat').value = resultado.latlng.lat || '';
     document.getElementById('lng').value = resultado.latlng.lng || '';
   }

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
-use App\Models\Establecimiento;
 use Illuminate\Http\Request;
+use App\Models\Establecimiento;
+use Intervention\Image\Facades\Image;
 
 class EstablecimientoController extends Controller
 {
@@ -28,7 +29,35 @@ class EstablecimientoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validacion
+
+        // $data = $request->validate([
+        //     'nombre'           => 'required',
+        //     'categoria_id'     => 'required|exists:App\Categoria,id',
+        //     'imagen_principal' => 'required|image|max:1000',
+        //     'direccion'        => 'required',
+        //     'localidad'        => 'required',
+        //     'cp'               => 'required',
+        //     'lat'              => 'required',
+        //     'lng'              => 'required',
+        //     'telefono'         => 'required|numeric',
+        //     'descripcion'      => 'required|min:50',
+        //     'apertura'         => 'date_format:H:i',
+        //     'cierre'           => 'date_format:H:i|after:apertura',
+        //     'uuid'             => 'required|uuid',
+        // ]);
+
+        // Guardar la imagen
+        $ruta_imagen = $request['imagen_principal']->store('principales', 'public');
+
+        // Resize a la imagen
+        $img = Image::make("storage/{$ruta_imagen}")->fit(800, 600);
+        $img->save();
+
+        // Guardar en BD
+
+
+        return 'desde store';
     }
 
     /**

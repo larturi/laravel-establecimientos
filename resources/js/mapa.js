@@ -77,8 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function llenarInputs(resultado) {
+        console.log(resultado.address);
         document.getElementById('direccion').value = resultado.address.Address || '';
         document.getElementById('localidad').value = resultado.address.Neighborhood || '';
+        document.getElementById('cp').value = resultado.address.Postal || '';
         document.getElementById('lat').value = resultado.latlng.lat || '';
         document.getElementById('lng').value = resultado.latlng.lng || '';
     }
