@@ -1,22 +1,22 @@
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
 const provider = new OpenStreetMapProvider();
 
-
 document.addEventListener('DOMContentLoaded', () => {
 
-    const mapa = L.map('mapa');
-    let markers = new L.featureGroup();
-
-    const geocodeService = L.esri.Geocoding.geocodeService();
+    const markers = new L.featureGroup();
 
     if(document.querySelector('#mapa')) {
 
-        const lat = -34.606975;
-        const lng = -58.445667;
+        const lat = document.querySelector('#lat').value === '' ? -34.606975 : document.querySelector('#lat').value;
+        const lng = document.querySelector('#lng').value === '' ? -58.445667 : document.querySelector('#lng').value;
 
+        let mapa = L.map('mapa');
         mapa.setView([lat, lng], 16);
 
-        markers.addTo(mapa);
+        let markers = new L.FeatureGroup().addTo(mapa);
+
+
+        // markers.addTo(mapa);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -32,52 +32,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Buscador de direcciones
         const buscador = document.getElementById('formbuscador');
-        buscador.addEventListener('blur', buscarDireccion);
+            buscador.addEventListener('blur', (e) => {
+                if(e.target.value.length) {
+                    buscarDireccion(e.target.value, mapa);
+                }
+            }
+        );
 
-        reubicarPin(marker);
+        reubicarPin(marker, mapa);
 
     }
 
-    function buscarDireccion(e) {
-        if (e.target.value.length > 6) {
-            provider.search({ query: e.target.value + ' AR' })
-               .then(resultado => {
-                   if (resultado) {
+    function buscarDireccion(direccion, mapa) {
 
-                        // Limpiar pines previos
-                        markers.clearLayers();
+        const geocodeService = L.esri.Geocoding.geocodeService();
 
-                        // Reverse geocoding
-                        geocodeService.reverse().latlng(resultado[0].bounds[0], 16).run(function(error, resultado) {
+        provider.search({ query: direccion + ' AR' })
+            .then(resultado => {
+                if (resultado) {
 
-                            // Llenar los inputs
-                            llenarInputs(resultado);
+                    // Limpiar pines previos
+                    markers.clearLayers();
 
-                            // Centrar el mapa
-                            mapa.setView(resultado.latlng);
+                    // Reverse geocoding
+                    geocodeService.reverse().latlng(resultado[0].bounds[0], 16).run(function(error, resultado) {
 
-                            // Agregar el pin
-                            let marker = new L.marker(resultado.latlng, {
-                                draggable: true,
-                                autoPan: true,
-                            }).addTo(mapa);
+                        // Llenar los inputs
+                        llenarInputs(resultado);
 
-                            // Asignar al contenedor de markers el nuevo pin
-                            markers.addLayer(marker);
+                        // Centrar el mapa
+                        mapa.setView(resultado.latlng);
 
-                            // Mover el Pin
-                            reubicarPin(marker);
-                        });
-                   }
-               })
-               .catch(error => {
-                   console.error(error);
-               });
-        }
+                        // Agregar el pin
+                        let marker = new L.marker(resultado.latlng, {
+                            draggable: true,
+                            autoPan: true,
+                        }).addTo(mapa);
+
+                        // Asignar al contenedor de markers el nuevo pin
+                        markers.addLayer(marker);
+
+                        // Mover el Pin
+                        reubicarPin(marker, mapa);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
     }
 
     function llenarInputs(resultado) {
-        console.log(resultado.address);
         document.getElementById('direccion').value = resultado.address.Address || '';
         document.getElementById('localidad').value = resultado.address.Neighborhood || '';
         document.getElementById('cp').value = resultado.address.Postal || '';
@@ -85,7 +91,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('lng').value = resultado.latlng.lng || '';
     }
 
-    function reubicarPin(marker) {
+    function reubicarPin(marker, mapa) {
+
+        const geocodeService = L.esri.Geocoding.geocodeService();
+
         marker.on('moveend', function(e) {
             marker = e.target;
 

@@ -30,22 +30,21 @@ class EstablecimientoController extends Controller
     public function store(Request $request)
     {
         // Validacion
-
-        // $data = $request->validate([
-        //     'nombre'           => 'required',
-        //     'categoria_id'     => 'required|exists:App\Categoria,id',
-        //     'imagen_principal' => 'required|image|max:1000',
-        //     'direccion'        => 'required',
-        //     'localidad'        => 'required',
-        //     'cp'               => 'required',
-        //     'lat'              => 'required',
-        //     'lng'              => 'required',
-        //     'telefono'         => 'required|numeric',
-        //     'descripcion'      => 'required|min:50',
-        //     'apertura'         => 'date_format:H:i',
-        //     'cierre'           => 'date_format:H:i|after:apertura',
-        //     'uuid'             => 'required|uuid',
-        // ]);
+        $data = $request->validate([
+            'nombre'           => 'required',
+            'categoria_id'     => 'required|exists:App\Models\Categoria,id',
+            'imagen_principal' => 'required|image|max:1000',
+            'direccion'        => 'required',
+            'localidad'        => 'required',
+            'cp'               => 'required',
+            'lat'              => 'required',
+            'lng'              => 'required',
+            'telefono'         => 'required|numeric',
+            'descripcion'      => 'required|min:50',
+            'apertura'         => 'date_format:H:i',
+            'cierre'           => 'date_format:H:i|after:apertura',
+            'uuid'             => 'required|uuid',
+        ]);
 
         // Guardar la imagen
         $ruta_imagen = $request['imagen_principal']->store('principales', 'public');
@@ -55,9 +54,23 @@ class EstablecimientoController extends Controller
         $img->save();
 
         // Guardar en BD
+        auth()->user()->establecimiento()->create([
+            'nombre'           => $data['nombre'],
+            'categoria_id'     => $data['categoria_id'],
+            'imagen_principal' => $ruta_imagen,
+            'direccion'        => $data['direccion'],
+            'localidad'        => $data['localidad'],
+            'cp'               => $data['cp'],
+            'lat'              => $data['lat'],
+            'lng'              => $data['lng'],
+            'telefono'         => $data['telefono'],
+            'descripcion'      => $data['descripcion'],
+            'apertura'         => $data['apertura'],
+            'cierre'           => $data['cierre'],
+            'uuid'             => $data['uuid']
+        ]);
 
-
-        return 'desde store';
+        return back()->with('estado', 'La informacion se amlacenó correctamente');
     }
 
     /**
