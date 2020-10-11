@@ -21,6 +21,7 @@ class APIController extends Controller
     {
         $establecimientos = Establecimiento::where('categoria_id', $categoria->id)
              ->with('categoria')
+             ->take(3)
              ->get();
 
         return response()->json($establecimientos);

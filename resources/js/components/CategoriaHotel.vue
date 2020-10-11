@@ -1,22 +1,24 @@
 <template>
     <div class="container my-5">
-        <h2>Cafés</h2>
+        <h2>Hoteles</h2>
         <div class="row">
-            <div class="col-md-4 mt-4" v-for="cafe in this.cafes" v-bind:key="cafe.id">
+            <div class="col-md-4 mt-4" v-for="hotel in this.hoteles" v-bind:key="hotel.id">
                 <div class="card">
-                    <img :src="`storage/${cafe.imagen_principal}`" class="card-img-top">
+                    <img :src="`storage/${hotel.imagen_principal}`" class="card-img-top">
                     <div class="card-body">
                         <h3 class="card-title text-primary font-weight-bold">
-                            {{ cafe.nombre }}
+                            {{ hotel.nombre }}
                         </h3>
-                        <p class="card-text">{{ cafe.direccion }}</p>
+                        <p class="card-text">{{ hotel.direccion }}</p>
                         <p class="card-text">
                             <span class="font-font-weight-bold">Horario:</span>
-                            {{ cafe.apertura }} - {{ cafe.cierre }}
+                            {{ hotel.apertura }} - {{ hotel.cierre }}
                         </p>
-                        <router-link :to="{name:'establecimiento', params: {id: cafe.id} }">
+
+                        <router-link :to="{name:'establecimiento', params: {id: hotel.id} }">
                             <a class="btn btn-primary btn-block" href="">Ver Lugar</a>
                         </router-link>
+
                     </div>
                 </div>
             </div>
@@ -28,14 +30,14 @@
 export default {
 
     mounted() {
-        axios.get('/api/categorias/cafe')
+        axios.get('/api/categorias/hotel')
            .then(respuesta => {
-               this.$store.commit("AGREGAR_CAFES", respuesta.data);
+               this.$store.commit("AGREGAR_HOTELES", respuesta.data);
            });
     },
     computed: {
-        cafes() {
-            return this.$store.state.cafes;
+        hoteles() {
+            return this.$store.state.hoteles;
         }
     },
 
