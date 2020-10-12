@@ -27,4 +27,10 @@ class APIController extends Controller
         return response()->json($establecimientos);
     }
 
+    // Muestra un establecimiento en especifico
+    public function show(Establecimiento $establecimiento)
+    {
+        return response()->json($establecimiento);
+    }
+
 }

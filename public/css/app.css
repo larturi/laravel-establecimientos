@@ -10916,6 +10916,10 @@ h4 {
   height: auto;
 }
 
+.bg-primary {
+  background-color: #6574cd !important;
+}
+
 .text-primary {
   color: #6574cd !important;
 }

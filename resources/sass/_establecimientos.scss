@@ -13,6 +13,9 @@ h1, h2, h3, h4 {
     height: auto;
 }
 
+.bg-primary {
+    background-color: $indigo!important;
+}
 
 .text-primary {
     color: $indigo!important;

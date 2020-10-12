@@ -130,7 +130,7 @@
 
                     {{-- Localidad --}}
                     <div class="form-group">
-                        <label for="direccion">Localidad</label>
+                        <label for="localidad">Localidad</label>
                         <input
                             type="text"
                             id="localidad"
