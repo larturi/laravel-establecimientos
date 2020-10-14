@@ -7,9 +7,16 @@
     >
         <l-tile-layer :url="url" :attribution="attribution" />
 
-        <l-marker>
+        <l-marker
+            v-for="establecimiento in establecimientos"
+            v-bind:key="establecimiento.id"
+            :lat-lng="obtenerCoordenadas(establecimiento)"
+            :icon="iconoEstablecimiento(establecimiento)"
+        >
             <l-tooltip>
-
+                <div>
+                    {{ establecimiento.nombre }} - {{ establecimiento.categoria.nombre }}
+                </div>
             </l-tooltip>
         </l-marker>
 
@@ -45,6 +52,40 @@ export default {
             showMap: true
         };
     },
+    created() {
+        axios.get('api/establecimientos')
+            .then(respuesta => {
+                this.$store.commit('AGREGAR_ESTABLECIMIENTOS', respuesta.data)
+            });
+    },
+    computed: {
+        establecimientos() {
+            return this.$store.getters.getEstablecimientos;
+        }
+    },
+    methods: {
+        obtenerCoordenadas(establecimiento) {
+            return {
+                lat: establecimiento.lat,
+                lng: establecimiento.lng,
+            }
+        },
+        iconoEstablecimiento(establecimiento) {
+            const { slug } = establecimiento.categoria;
+            return L.icon({
+                iconUrl: `images/iconos/${slug}.png`,
+                iconSize: [40, 50]
+            });
+        }
+    },
+    watch: {
+       "$store.state.categoria": function() {
+           axios.get('/api/' + this.$store.getters.getCategoria)
+              .then(respuesta => {
+                  this.$store.commit('AGREGAR_ESTABLECIMIENTOS', respuesta.data);
+              });
+       }
+    }
 }
 </script>
 

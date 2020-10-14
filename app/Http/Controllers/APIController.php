@@ -12,7 +12,7 @@ class APIController extends Controller
     // Metodo para obtener todos los establecimientos
     public function index()
     {
-        $establecimientos = Establecimiento::all();
+        $establecimientos = Establecimiento::with('categoria')->get();
         return response()->json($establecimientos);
     }
 
@@ -24,7 +24,7 @@ class APIController extends Controller
         return response()->json($categorias);
     }
 
-    // Mostrar los establecimientos de una determinada categotia
+    // Mostrar los ultimos tres establecimientos de una determinada categoria
     public function categoria(Categoria $categoria)
     {
         $establecimientos = Establecimiento::where('categoria_id', $categoria->id)
@@ -33,6 +33,15 @@ class APIController extends Controller
              ->orderBy('id', 'desc')
              ->get();
 
+        return response()->json($establecimientos);
+    }
+
+    // Mostrar todos los establecimientos de una determinada categoria
+    public function establecimientosCategoria(Categoria $categoria)
+    {
+        $establecimientos = Establecimiento::where('categoria_id', $categoria->id)
+             ->with('categoria')
+             ->get();
 
         return response()->json($establecimientos);
     }

@@ -23,3 +23,4 @@ Route::get('/establecimientos/{establecimiento}', 'APIController@show')->name('e
 
 Route::get('/categorias', 'APIController@categorias')->name('categorias');
 Route::get('/categorias/{categoria}', 'APIController@categoria')->name('categoria');
+Route::get('/{categoria}', 'APIController@establecimientosCategoria')->name('establecimientoscategoria');
