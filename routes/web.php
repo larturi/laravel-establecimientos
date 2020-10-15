@@ -20,9 +20,10 @@ Auth::routes(['verify' => true]);
 
 Route::group(['middleware' => ['auth', 'verified']], function() {
     // Establecimiento
-    Route::get('/establecimiento/create', 'EstablecimientoController@create')->name('establecimiento.create');
+    Route::get('/establecimiento/create', 'EstablecimientoController@create')->name('establecimiento.create')->middleware('revisar');
     Route::post('/establecimiento', 'EstablecimientoController@store')->name('establecimiento.store');
     Route::get('/establecimiento/edit', 'EstablecimientoController@edit')->name('establecimiento.edit');
+    Route::put('/establecimiento/{establecimiento}', 'EstablecimientoController@update')->name('establecimiento.update');
 
     // Imagenes
     Route::post('/imagenes/store', 'ImagenController@store')->name('imagenes.store');

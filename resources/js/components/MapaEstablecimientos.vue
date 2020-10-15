@@ -11,6 +11,7 @@
             v-for="establecimiento in establecimientos"
             v-bind:key="establecimiento.id"
             :lat-lng="obtenerCoordenadas(establecimiento)"
+            @click="redireccionar(establecimiento.id)"
             :icon="iconoEstablecimiento(establecimiento)"
         >
             <l-tooltip>
@@ -76,6 +77,9 @@ export default {
                 iconUrl: `images/iconos/${slug}.png`,
                 iconSize: [40, 50]
             });
+        },
+        redireccionar(establecimiento_id) {
+            this.$router.push({name: 'establecimiento', params: {id: establecimiento_id}});
         }
     },
     watch: {
