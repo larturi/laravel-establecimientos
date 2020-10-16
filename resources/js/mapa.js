@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let markers = new L.FeatureGroup().addTo(mapa);
 
-
         // markers.addTo(mapa);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -85,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function llenarInputs(resultado) {
         document.getElementById('direccion').value = resultado.address.Address || '';
-        document.getElementById('localidad').value = resultado.address.Neighborhood || '';
+        document.getElementById('localidad').value = resultado.address.City || '';
         document.getElementById('cp').value = resultado.address.Postal || '';
         document.getElementById('lat').value = resultado.latlng.lat || '';
         document.getElementById('lng').value = resultado.latlng.lng || '';

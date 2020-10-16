@@ -23,7 +23,7 @@
 
         <div class="mt-4 row justify-content-center">
             <form class="col-md-9 col-xs-12 card card-body"
-                  action="{{ route('establecimiento.edit', ['establecimiento' => 'establecimiento.id']) }}"
+                  action="{{route('establecimiento.update', ['establecimiento' => $establecimiento->id ])}}"
                   method="POST"
                   enctype="multipart/form-data">
 
@@ -42,7 +42,7 @@
                                class="form-control @error('nombre') is-invalid @enderror"
                                placeholder="Nombre del establecimiento"
                                name="nombre"
-                               value="{{ old('nombre') }}">
+                               value="{{ $establecimiento->nombre }}">
 
                         @error('nombre')
                             <div class="invalid-feedback">
@@ -61,7 +61,7 @@
 
                             @foreach ($categorias as $categoria)
                                <option value="{{ $categoria->id }}"
-                                       {{ old('categoria_id') == $categoria->id ? 'selected' : '' }}
+                                       {{ $establecimiento->categoria_id  == $categoria->id ? 'selected' : '' }}
                                 >
                                   {{ $categoria->nombre }}
                                </option>
@@ -78,7 +78,6 @@
                             type="file"
                             class="form-control @error('imagen_principal') is-invalid @enderror "
                             name="imagen_principal"
-                            value="{{ old('imagen_principal') }}"
                         >
 
                         @error('imagen_principal')
@@ -86,6 +85,8 @@
                                 {{$message}}
                             </div>
                         @enderror
+
+                        <img class="mt-4" style="width: 200px;" src="/storage/{{ $establecimiento->imagen_principal }}" alt="">
                     </div>
 
                 </fieldset>
@@ -99,6 +100,7 @@
                         <input type="text"
                                id="formbuscador"
                                class="form-control"
+                               value=""
                                placeholder="Dirección del establecimiento">
 
                         <p class="text-secondary mt-4 mb-3 text-center">
@@ -121,7 +123,7 @@
                             name="direccion"
                             class="form-control @error('direccion') is-invalid @enderror"
                             placeholder="Dirección"
-                            value="{{ old('direccion') }}">
+                            value="{{ $establecimiento->direccion }}">
 
                             @error('direccion')
                                 <div class="invalid-feedback">
@@ -139,7 +141,7 @@
                             name="localidad"
                             class="form-control @error('localidad') is-invalid @enderror"
                             placeholder="Localidad"
-                            value="{{ old('localidad') }}">
+                            value="{{ $establecimiento->localidad }}">
 
                             @error('localidad')
                                 <div class="invalid-feedback">
@@ -157,7 +159,7 @@
                             name="cp"
                             class="form-control @error('cp') is-invalid @enderror"
                             placeholder="Código Postal"
-                            value="{{ old('cp') }}">
+                            value="{{ $establecimiento->cp }}">
 
                             @error('cp')
                                 <div class="invalid-feedback">
@@ -166,8 +168,8 @@
                             @enderror
                     </div>
 
-                    <input type="hidden" id="lat" name="lat" value="{{ old('lat') }}">
-                    <input type="hidden" id="lng" name="lng" value="{{ old('lng') }}">
+                    <input type="hidden" id="lat" name="lat" value="{{ $establecimiento->lat }}">
+                    <input type="hidden" id="lng" name="lng" value="{{ $establecimiento->lng }}">
 
                 </fieldset>
 
@@ -181,7 +183,7 @@
                                 id="telefono"
                                 placeholder="Teléfono Establecimiento"
                                 name="telefono"
-                                value="{{ old('telefono') }}"
+                                value="{{ $establecimiento->telefono }}"
                             >
 
                                 @error('telefono')
@@ -196,7 +198,7 @@
                             <textarea
                                 class="form-control  @error('descripcion')  is-invalid  @enderror"
                                 name="descripcion"
-                            >{{ old('descripcion') }}</textarea>
+                            >{{ $establecimiento->descripcion }}</textarea>
 
                                 @error('descripcion')
                                     <div class="invalid-feedback">
@@ -212,7 +214,7 @@
                                 class="form-control @error('apertura')  is-invalid  @enderror"
                                 id="apertura"
                                 name="apertura"
-                                value="{{ old('apertura') }}"
+                                value="{{ $establecimiento->apertura }}"
                             >
                             @error('apertura')
                                 <div class="invalid-feedback">
@@ -228,7 +230,7 @@
                                 class="form-control @error('cierre')  is-invalid  @enderror"
                                 id="cierre"
                                 name="cierre"
-                                value="{{ old('cierre') }}"
+                                value="{{ $establecimiento->cierre }}"
                             >
                             @error('cierre')
                                 <div class="invalid-feedback">
@@ -243,14 +245,18 @@
                         <div class="form-group">
                             <label for="imagenes">Imágenes</label>
                             <div id="dropzone" class="dropzone form-control">
-
                             </div>
                         </div>
+
+                        @if (count($imagenes) > 0)
+                            @foreach ($imagenes as $imagen)
+                                <input type="hidden" class="galeria" name="galeria" value="{{ $imagen->ruta_imagen }}">
+                            @endforeach
+                        @endif
                 </fieldset>
 
-                <input type="hidden" id="uuid" name="uuid" value="{{ Str::uuid()->toString() }}">
-
-                <input type="submit" class="btn btn-primary mt-3 d-block" value="Registrar Establecimiento">
+                <input type="hidden" id="uuid" name="uuid" value="{{ $establecimiento->uuid }}">
+                <input type="submit" class="btn btn-primary mt-3 d-block" value="Guardar cambios">
 
             </form>
         </div>
